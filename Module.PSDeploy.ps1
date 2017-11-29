@@ -1,11 +1,11 @@
 Deploy Module {
-    By PSGalleryModule {
-        FromSource "bin/$ENV:ModuleName"
-        To PSGallery
-        WithOptions @{
-            ApiKey = $ENV:NugetApiKey
-        }
-    }
+    #By PSGalleryModule {
+    #    FromSource "bin/$ENV:ModuleName"
+    #    To PSGallery
+    #    WithOptions @{
+    #        ApiKey = $ENV:NugetApiKey
+    #    }
+    #}
 
     By AppVeyorModule {
         FromSource "bin/$ENV:ModuleName"
