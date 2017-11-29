@@ -96,15 +96,7 @@ Task Deploy -Depends Init {
         $ENV:BHCommitMessage   -match '!deploy' -and
         $HasApiKey
     ) {
-        Deploy Module {
-            By PSGalleryModule {
-                FromSource $ModuleFolder
-                To PSGallery
-                WithOptions @{
-                    ApiKey = $ENV:NugetApiKey
-                }
-            }
-        }
+        Invoke-PSDeploy $ProjectRoot -Force
     }
     else {
         "Skipping deployment: To deploy, ensure that...`n" +
