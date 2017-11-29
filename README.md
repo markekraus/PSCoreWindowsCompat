@@ -1,5 +1,7 @@
 # PSCoreWindowsCompat
 
+[![Build status](https://ci.appveyor.com/api/projects/status/9u20232sqxq95t4b/branch/master?svg=true)](https://ci.appveyor.com/project/markekraus/pscorewindowscompat/branch/master)
+
 Provides the Microsoft.Windows.Compatibility Pack to PowerShell Core on Windows. This module does not provide any functions but serves as a convenient way to add the [Microsoft.Windows.Compatibility Pack](https://blogs.msdn.microsoft.com/dotnet/2017/11/16/announcing-the-windows-compatibility-pack-for-net-core/) to PowerShell Core. This will only work on windows systems in 64-bit [PowerShell Core](https://github.com/PowerShell/PowerShell).
 
 ## Installation
