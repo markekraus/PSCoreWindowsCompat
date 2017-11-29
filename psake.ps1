@@ -59,6 +59,7 @@ Task Init {
     "`n"
     "Current Version: $CurrentVersion`n"
     "Build Version: $BuildVersion`n"
+    "Module Path: $ModuleFolder"
     Find-Dotnet
     "`n"
 }
@@ -88,10 +89,12 @@ Task Test -Depends Init {
 
 Task Deploy -Depends Init {
     $lines
+    $HasApiKey = -not [String]::IsNullOrEmpty($ENV:NugetApiKey)
     if (
-        $ENV:BHBuildSystem -ne 'Unknown' -and
-        $ENV:BHBranchName -eq "master" -and
-        $ENV:BHCommitMessage -match '!deploy'
+        $ENV:BHBuildSystem     -ne    'Unknown' -and
+        $ENV:BHBranchName      -eq    "master"  -and
+        $ENV:BHCommitMessage   -match '!deploy' -and
+        $HasApiKey
     ) {
         Deploy Module {
             By PSGalleryModule {
@@ -108,6 +111,7 @@ Task Deploy -Depends Init {
         "`t* You are in a known build system (Current: $ENV:BHBuildSystem)`n" +
         "`t* You are committing to the master branch (Current: $ENV:BHBranchName) `n" +
         "`t* Your commit message includes !deploy (Current: $ENV:BHCommitMessage)"
+        "`t* NugetApiKey Environment variable is set (Currently: $HasApiKey)"
     }
     "`n"
 }
