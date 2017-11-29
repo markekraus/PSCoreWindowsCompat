@@ -96,7 +96,7 @@ Task Deploy -Depends Init {
         $ENV:BHCommitMessage -match '!deploy' -and
         $HasApiKey
     ) {
-        Invoke-PSDeploy $ProjectRoot -Force -Verbose
+        Invoke-PSDeploy $ProjectRoot -Force
     }
     else {
         "Skipping deployment: To deploy, ensure that...`n" +
