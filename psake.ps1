@@ -44,7 +44,7 @@ Properties {
         }
     }
     $BuildDate = Get-Date -uFormat '%Y-%m-%d'
-    $Dotnetconfiguration = "release"
+    $DotnetConfiguration = "release"
     $DotnetCLIRequiredVersion = "2.0.0"
     $DotnetRuntime = 'win-x64'
 }
@@ -70,7 +70,7 @@ Task Build -Depends Init {
         Push-Location $SrcPath
         New-Item -Path $ModuleFolder -ItemType Directory -ErrorAction SilentlyContinue
         dotnet restore
-        dotnet publish --configuration $Dotnetconfiguration --runtime $DotnetRuntime --output $ModuleFolder
+        dotnet publish --configuration $DotnetConfiguration --runtime $DotnetRuntime --output $ModuleFolder
         Update-Metadata -Path $BinManifest -PropertyName 'ModuleVersion' -Value $BuildVersion
     }
     catch {

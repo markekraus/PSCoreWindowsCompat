@@ -1,14 +1,10 @@
 function Get-EnvironmentInformation {
     $environment = @{}
-    # Use the .NET Core APIs to determine the current platform.
-    # If a runtime exception is thrown, we are on Windows PowerShell, not PowerShell Core,
-    # because System.Runtime.InteropServices.RuntimeInformation
-    # and System.Runtime.InteropServices.OSPlatform do not exist in Windows PowerShell.
     try {
         $Runtime = [System.Runtime.InteropServices.RuntimeInformation]
         $OSPlatform = [System.Runtime.InteropServices.OSPlatform]
 
-        $environment += @{'IsCoreCLR' = $true}
+        $environment += @{'IsCoreCLR' = 'Core' -eq $PSVersionTable.PSEdition}
         $environment += @{'IsLinux' = $Runtime::IsOSPlatform($OSPlatform::Linux)}
         $environment += @{'IsOSX' = $Runtime::IsOSPlatform($OSPlatform::OSX)}
         $environment += @{'IsWindows' = $Runtime::IsOSPlatform($OSPlatform::Windows)}
@@ -54,19 +50,22 @@ function Get-EnvironmentInformation {
     return [PSCustomObject] $environment
 }
 
-function Find-Dotnet() {
+function Find-Dotnet {
     $OriginalPath = $env:PATH
     $Environment = Get-EnvironmentInformation
+
     $DotnetPath = if ($Environment.IsWindows) {
         "$env:LocalAppData\Microsoft\dotnet"
     }
     else {
         "$env:HOME/.dotnet"
     }
+
     if (-not (Test-DotnetExists)) {
         "Could not find 'dotnet', appending $DotnetPath to PATH."
         $env:PATH += [IO.Path]::PathSeparator + $dotnetPath
     }
+
     if (-not (Test-DotnetExists)) {
         "Still could not find 'dotnet', restoring PATH."
         $env:PATH = $originalPath
