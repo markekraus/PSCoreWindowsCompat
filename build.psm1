@@ -1,5 +1,4 @@
-function Get-EnvironmentInformation
-{
+function Get-EnvironmentInformation {
     $environment = @{}
     # Use the .NET Core APIs to determine the current platform.
     # If a runtime exception is thrown, we are on Windows PowerShell, not PowerShell Core,
@@ -13,21 +12,20 @@ function Get-EnvironmentInformation
         $environment += @{'IsLinux' = $Runtime::IsOSPlatform($OSPlatform::Linux)}
         $environment += @{'IsOSX' = $Runtime::IsOSPlatform($OSPlatform::OSX)}
         $environment += @{'IsWindows' = $Runtime::IsOSPlatform($OSPlatform::Windows)}
-    } catch {
+    }
+    catch {
         $environment += @{'IsCoreCLR' = $false}
         $environment += @{'IsLinux' = $false}
         $environment += @{'IsOSX' = $false}
         $environment += @{'IsWindows' = $true}
     }
 
-    if ($Environment.IsWindows)
-    {
+    if ($Environment.IsWindows) {
         $environment += @{'IsAdmin' = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)}
         # Can't use $env:HOME - not available on older systems (e.g. in AppVeyor)
         $environment += @{'nugetPackagesRoot' = "${env:HOMEDRIVE}${env:HOMEPATH}\.nuget\packages"}
     }
-    else
-    {
+    else {
         $environment += @{'nugetPackagesRoot' = "${env:HOME}/.nuget/packages"}
     }
 
@@ -41,8 +39,8 @@ function Get-EnvironmentInformation
         $environment += @{'IsCentOS' = $LinuxInfo.ID -match 'centos' -and $LinuxInfo.VERSION_ID -match '7'}
         $environment += @{'IsFedora' = $LinuxInfo.ID -match 'fedora' -and $LinuxInfo.VERSION_ID -ge 24}
         $environment += @{'IsOpenSUSE' = $LinuxInfo.ID -match 'opensuse'}
-        $environment += @{'IsOpenSUSE13' = $Environment.IsOpenSUSE -and $LinuxInfo.VERSION_ID  -match '13'}
-        $environment += @{'IsOpenSUSE42.1' = $Environment.IsOpenSUSE -and $LinuxInfo.VERSION_ID  -match '42.1'}
+        $environment += @{'IsOpenSUSE13' = $Environment.IsOpenSUSE -and $LinuxInfo.VERSION_ID -match '13'}
+        $environment += @{'IsOpenSUSE42.1' = $Environment.IsOpenSUSE -and $LinuxInfo.VERSION_ID -match '42.1'}
         $environment += @{'IsRedHatFamily' = $Environment.IsCentOS -or $Environment.IsFedora -or $Environment.IsOpenSUSE}
 
         # Workaround for temporary LD_LIBRARY_PATH hack for Fedora 24
@@ -61,7 +59,8 @@ function Find-Dotnet() {
     $Environment = Get-EnvironmentInformation
     $DotnetPath = if ($Environment.IsWindows) {
         "$env:LocalAppData\Microsoft\dotnet"
-    } else {
+    }
+    else {
         "$env:HOME/.dotnet"
     }
     if (-not (Test-DotnetExists)) {
@@ -74,11 +73,11 @@ function Find-Dotnet() {
     }
 }
 
-Function Test-DotnetExists () {
-    if(Get-Command dotnet -ErrorAction SilentlyContinue){
+Function Test-DotnetExists {
+    if (Get-Command dotnet -ErrorAction SilentlyContinue) {
         $True
     }
-    Else {
+    else {
         $False
     }
 }
