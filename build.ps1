@@ -4,11 +4,11 @@ Get-PackageProvider -Name NuGet -ForceBootstrap | Out-Null
 
 $ModuleInstallScope = 'CurrentUser'
 if (-not [String]::IsNullOrEmpty($ENV:APPVEYOR_BUILD_FOLDER)) {
-    $ModuleInstallScope = 'Global'
+    $ModuleInstallScope = 'AllUsers'
 }
 
 Install-Module -Scope $ModuleInstallScope Psake, PSDeploy, BuildHelpers -force
-Import-Module Psake, BuildHelpers
+Import-Module Psake, PSDeploy, BuildHelpers
 
 Import-Module .\build.psm1
 
