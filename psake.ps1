@@ -101,9 +101,10 @@ Task Deploy -Depends Init, InstallPSCore {
     ) {
         $Env:ProjectRoot = $ProjectRoot
         {
+            Import-Module -Force -MinimumVersion 1.6.0 PowerShellGet
             Install-Module -Force -Scope CurrentUser -Name PSDeploy
             Invoke-PSDeploy $Env:ProjectRoot -Force
-        } | pwsh.exe
+        } | pwsh.exe -nol
     }
     else {
         "Skipping deployment: To deploy, ensure that...`n" +
@@ -118,15 +119,19 @@ Task Deploy -Depends Init, InstallPSCore {
 Task InstallPSCore {
     $lines
     $command = Get-Command pwsh -ErrorAction SilentlyContinue
-    if(-not $command)
-    {
+    if (-not $command) {
         'Installing PowerShell Core from {0}' -f $PSCoreMSI
         try {
             $oldPref = $ProgressPreference
             $ProgressPreference = 'SilentlyContinue'
             Invoke-WebRequest -Uri $PSCoreMSI -UseBasicParsing -OutFile "C:\PowerShell-win10-x64.msi"
-            Start-Process -FilePath msiexec.exe -ArgumentList '-qn','-i C:\PowerShell-win10-x64.msi','-norestart' -wait
+            Start-Process -FilePath msiexec.exe -ArgumentList '-qn', '-i C:\PowerShell-win10-x64.msi', '-norestart' -wait
             $env:Path = "{0}{1}{2}" -f $env:Path, ([System.IO.Path]::PathSeparator), $PSCoreInstallPath
+
+            pwsh.exe -nol -c 'Register-PSRepository -Default -ErrorAction SilentlyContinue'
+            pwsh.exe -nol -c 'Set-PSRepository -Name PSGallery -InstallationPolicy Trusted'
+            pwsh.exe -nol -c 'Get-PSRepository'
+            pwsh.exe -nol -c 'Install-Module -Force PowerShellGet -MinimumVersion 1.6.0 -Scope CurrentUser -AllowClobber'
         }
         finally {
             $ProgressPreference = $oldPref
