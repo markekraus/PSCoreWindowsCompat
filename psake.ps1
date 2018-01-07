@@ -99,9 +99,10 @@ Task Deploy -Depends Init, InstallPSCore {
         $ENV:BHCommitMessage -match '!deploy' -and
         $HasApiKey
     ) {
+        $Env:ProjectRoot = $ProjectRoot
         {
             Install-Module -Force -Scope CurrentUser -Name PSDeploy
-            Invoke-PSDeploy '$ProjectRoot' -Force
+            Invoke-PSDeploy $Env:ProjectRoot -Force
         } | pwsh.exe
     }
     else {
