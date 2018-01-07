@@ -47,6 +47,9 @@ Properties {
     $DotnetConfiguration = "release"
     $DotnetCLIRequiredVersion = "2.0.0"
     $DotnetRuntime = 'win-x64'
+
+    $PSCoreMSI = "https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-rc.2/PowerShell-6.0.0-rc.2-win-x64.msi"
+    $PSCoreInstallPath = "C:\Program Files\PowerShell\6.0.0-rc.2"
 }
 
 Task Default -Depends Init, Build, Test, Deploy
@@ -87,7 +90,7 @@ Task Test -Depends Init {
     "`n"
 }
 
-Task Deploy -Depends Init {
+Task Deploy -Depends Init, InstallPSCore {
     $lines
     $HasApiKey = -not [String]::IsNullOrEmpty($ENV:NugetApiKey)
     if (
@@ -96,7 +99,10 @@ Task Deploy -Depends Init {
         $ENV:BHCommitMessage -match '!deploy' -and
         $HasApiKey
     ) {
-        Invoke-PSDeploy $ProjectRoot -Force
+        {
+            Install-Module -Force -Scope CurrentUser -Name PSDeploy
+            Invoke-PSDeploy '$ProjectRoot' -Force
+        } | pwsh.exe
     }
     else {
         "Skipping deployment: To deploy, ensure that...`n" +
@@ -104,6 +110,26 @@ Task Deploy -Depends Init {
         "`t* You are committing to the master branch (Current: $ENV:BHBranchName) `n" +
         "`t* Your commit message includes !deploy (Current: $ENV:BHCommitMessage)"
         "`t* NugetApiKey Environment variable is set (Currently: $HasApiKey)"
+    }
+    "`n"
+}
+
+Task InstallPSCore {
+    $lines
+    $command = Get-Command pwsh -ErrorAction SilentlyContinue
+    if(-not $command)
+    {
+        'Installing PowerShell Core from {0}' -f $PSCoreMSI
+        try {
+            $oldPref = $ProgressPreference
+            $ProgressPreference = 'SilentlyContinue'
+            Invoke-WebRequest -Uri $PSCoreMSI -UseBasicParsing -OutFile "C:\PowerShell-win10-x64.msi"
+            Start-Process -FilePath msiexec.exe -ArgumentList '-qn','-i C:\PowerShell-win10-x64.msi','-norestart' -wait
+            $env:Path = "{0}{1}{2}" -f $env:Path, ([System.IO.Path]::PathSeparator), $PSCoreInstallPath
+        }
+        finally {
+            $ProgressPreference = $oldPref
+        }
     }
     "`n"
 }
