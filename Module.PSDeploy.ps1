@@ -1,4 +1,5 @@
 Deploy Module {
+<#
     By AppVeyorModule {
         FromSource "bin/$ENV:ModuleName"
         To AppVeyor
@@ -6,7 +7,7 @@ Deploy Module {
             Version = $env:APPVEYOR_BUILD_VERSION
         }
     }
-
+#>
     By PSGalleryModule {
         FromSource "bin/$ENV:ModuleName"
         To PSGallery
