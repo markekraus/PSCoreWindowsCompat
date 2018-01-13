@@ -48,8 +48,8 @@ Properties {
     $DotnetCLIRequiredVersion = "2.0.0"
     $DotnetRuntime = 'win-x64'
 
-    $PSCoreMSI = "https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-rc.2/PowerShell-6.0.0-rc.2-win-x64.msi"
-    $PSCoreInstallPath = "C:\Program Files\PowerShell\6.0.0-rc.2"
+    $PSCoreMSI = "https://github.com/PowerShell/PowerShell/releases/download/v6.0.0/PowerShell-6.0.0-win-x64.msi"
+    $PSCoreInstallPath = "C:\Program Files\PowerShell\6.0.0"
 }
 
 Task Default -Depends Init, Build, Test, Deploy
