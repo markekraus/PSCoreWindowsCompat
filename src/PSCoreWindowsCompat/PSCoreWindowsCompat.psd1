@@ -7,6 +7,7 @@
     Description           = 'Provides the Microsoft.Windows.Compatibility Pack to PowerShell Core on 64-bit Windows Only. This module is not supported on non-Windows platforms nor on 32-bit Windows.'
     ProcessorArchitecture = 'Amd64'
     PowerShellVersion     = '6.0.0'
+    CompatiblePSEditions  = 'Core'
     RequiredAssemblies    = @(
         'System.CodeDom.dll'
         'System.Configuration.ConfigurationManager.dll'
@@ -31,14 +32,13 @@
     AliasesToExport       = '*'
     PrivateData           = @{
         PSData = @{
-            Tags         = @('Core', 'PSCore', 'Windows')
+            Tags         = @('PSEdition_Core', 'Core', 'PSCore', 'Windows')
             LicenseUri   = 'https://github.com/markekraus/PSCoreWindowsCompat/blob/master/LICENSE'
             ProjectUri   = 'https://github.com/markekraus/PSCoreWindowsCompat'
             ReleaseNotes = '
-# 2017-01-07
+# 2017-01-13
 
-* Add Version 6.0.0 requirement
-* Update description to make it more clear this module is intended only for 64-bit Windows
+* Add PSEdition_Core Tag and PSEDition Core requirement
 '
         }
     }
