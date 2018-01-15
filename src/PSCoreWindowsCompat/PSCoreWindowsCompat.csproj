@@ -6,5 +6,6 @@
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="2.0.0-preview1-25914-04" />
     <PackageReference Include="PowerShellStandard.Library" Version="3.0.0-preview-01" />
     <None Include="PSCoreWindowsCompat.psd1" CopyToOutputDirectory="Always" />
+    <None Include="PSCoreWindowsCompat.psm1" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 @{
-    RootModule            = 'PSCoreWindowsCompat.dll'
+    RootModule            = 'PSCoreWindowsCompat.psm1'
+    NestedModules         = 'PSCoreWindowsCompat.dll'
     ModuleVersion         = '0.0.1'
     GUID                  = 'e428e6fa-4a7e-4531-84b2-aa9452b6b56f'
     Author                = 'Mark Kraus'
